@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ec2-user/app/step2/zip/
+    destination: /home/ec2-user/app/step3/zip/
     overwrite: yes
 
 permissions:
@@ -12,8 +12,15 @@ permissions:
     group: ec2-user
 
 hooks:
-  # CodeDeploy에서 실행할 명령어 지정 ApplicationStart에서 deploy.sh를 ec2-user 권한으로 실행하게함
+  AfterInstall:
+    - location: stop.sh # terminate SpringBoot not connected to nginx
+      timeout: 60
+      runas: ec2-user
   ApplicationStart:
-    - location: deploy.sh
+    - location: start.sh # start new SpringBoot with the port not used by nginx
+      timeout: 60
+      runas: ec2-user
+  ValidateService:
+    - location: health.sh # check availability of new SpringBoot
       timeout: 60
       runas: ec2-user
