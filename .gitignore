@@ -6,4 +6,4 @@
 .idea
 application-oauth.properties
 # travis 오류
-.travis.yml
+#.travis.yml
